@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
 
-
+    /*This comment is to see if git works*/
     QApplication a(argc, argv);
     MainWindow w;
     customerLog logFile;
