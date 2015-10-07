@@ -18,6 +18,10 @@ public:
 public slots:
      bool isTrail(int trace, QString action);
 
+private slots:
+
+     void on_traceBtn_clicked();
+
 private:
     Ui::MaintanenceView *ui;
 };

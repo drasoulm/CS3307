@@ -26,6 +26,8 @@ public:
 private slots:
     void on_nextButton_clicked();
 
+    void on_cancelButton_clicked();
+
 private:
     Ui::createuser *ui;
 };

@@ -42,14 +42,14 @@ void createuser::on_nextButton_clicked()
         db.connOpen();
 
         if (cheq&&sav){
-            answerCheq = QInputDialog::getDouble(this, "Creating Chequing Account..", "Deposit:");
-            answerSav = QInputDialog::getDouble(this, "Creating Savings Account..", "Deposit:");
+            answerCheq = QInputDialog::getDouble(this, "Creating Chequing Account..", "Deposit:",0,0,100000,2);
+            answerSav = QInputDialog::getDouble(this, "Creating Savings Account..", "Deposit:",0,0,100000,2);
             cheqAcct = 1;
             savAcct = 1;
         }
         else if(cheq){
 
-            answerCheq = QInputDialog::getDouble(this, "Creating Chequing Account..", "Deposit:");
+            answerCheq = QInputDialog::getDouble(this, "Creating Chequing Account..", "Deposit:",0,0,100000,2);
             answerSav = 0.0;
             savAcct = 0;
             cheqAcct = 1;
@@ -97,4 +97,11 @@ void createuser::on_nextButton_clicked()
 
 
 
+}
+
+void createuser::on_cancelButton_clicked()
+{
+    managerLogin managerView;
+    managerView.setModal(true);
+    managerView.exec();
 }

@@ -106,6 +106,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="closeChequing">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>20</x>
@@ -132,6 +135,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="closeSav">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>150</x>
@@ -145,6 +151,9 @@
    </property>
   </widget>
   <widget class="QPushButton" name="closeBoth">
+   <property name="enabled">
+    <bool>false</bool>
+   </property>
    <property name="geometry">
     <rect>
      <x>270</x>

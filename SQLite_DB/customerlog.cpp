@@ -41,9 +41,6 @@ void customerLog::addClientToLog(QString name, QString userName, QString role){
     file << log <<endl << endl;
 
 
-
-
-
 }
 
 string customerLog::now(){

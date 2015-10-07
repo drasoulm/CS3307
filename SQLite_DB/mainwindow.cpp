@@ -48,9 +48,12 @@ void MainWindow::on_pushButton_clicked()
         }
 
         /*Check to see if client is a manager, customer, or maintance role and display correct view*/
+        MaintanenceView mv;
 
         if(client.manager == 1){
+            QString action = "MAINWINDOW: MANAGER LOGGED IN";
             QString role = "MANAGER";
+            mv.isTrail(client.isTrail, action);
             logFile.addClientToLog(client.name, client.ID, role);
             this->hide();
             managerLogin managerlogin;
@@ -58,7 +61,9 @@ void MainWindow::on_pushButton_clicked()
             managerlogin.exec();
         }
         else if(client.manager == 0 && client.maintPers == 0){
-            QString role = "CUSTOMER";
+            QString action = "MAINWINDOW: CLIENT LOGGED IN";
+            QString role = "CLIENT";
+            mv.isTrail(client.isTrail, action);
             logFile.addClientToLog(client.name, client.ID, role);
 
             this->hide();
@@ -68,7 +73,9 @@ void MainWindow::on_pushButton_clicked()
             customerLogin.exec();
         }
         else if(client.maintPers == 1){
+            QString action = "MAINWINDOW: MAINTANECE LOGGED IN";
             QString role = "MAINTANCE";
+            mv.isTrail(client.isTrail, action);
             logFile.addClientToLog(client.name, client.ID, role);
             this->hide();
             MaintanenceView maintanceLogin;

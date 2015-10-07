@@ -39,13 +39,19 @@ public:
     ~DeleteUser();
 
 public slots:
-     void updateCustomerInformation(int cheq, int sav, QTextEdit *hey, QSqlQuery qry2);
+     void updateCustomerInformation(double cheq, double sav, QTextEdit *hey, QSqlQuery qry2);
 
 private slots:
     void on_searchButton_clicked();
     void on_closeChequing_clicked();
     void on_viewAll_clicked();
     void disableBtns(int cheq, int save, QPushButton *btn1, QPushButton *btn2, QPushButton *btn3);
+    void on_backButton_clicked();
+
+    void on_closeSav_clicked();
+
+    void on_closeBoth_clicked();
+
 private:
     Ui::DeleteUser *ui;
 
