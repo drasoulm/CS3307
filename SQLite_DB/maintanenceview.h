@@ -22,6 +22,8 @@ private slots:
 
      void on_traceBtn_clicked();
 
+     void on_pushButton_clicked();
+
 private:
     Ui::MaintanenceView *ui;
 };

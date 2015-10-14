@@ -12,6 +12,9 @@ MainWindow::MainWindow(QWidget *parent) :
 {
 
     ui->setupUi(this);
+
+    ui->lineEdit_2->setEchoMode(QLineEdit::Password);
+    ui->lineEdit_2->setInputMethodHints(Qt::ImhHiddenText| Qt::ImhNoPredictiveText|Qt::ImhNoAutoUppercase);
 }
 
 MainWindow::~MainWindow()
@@ -45,32 +48,29 @@ void MainWindow::on_pushButton_clicked()
             client.passWord = qry.value(2).toDouble();
             client.isTrail = qry.value(8).toInt();
             client.maintPers = qry.value(9).toInt();
+            client.hasCheq = qry.value(7).toInt();
+            client.hasSav = qry.value(6).toInt();
+            qDebug()<<(qry.record());
+
         }
 
         /*Check to see if client is a manager, customer, or maintance role and display correct view*/
         MaintanenceView mv;
+        if(client.name=="" && client.passWord =="") {
 
-        if(client.manager == 1){
-            QString action = "MAINWINDOW: MANAGER LOGGED IN";
-            QString role = "MANAGER";
-            mv.isTrail(client.isTrail, action);
-            logFile.addClientToLog(client.name, client.ID, role);
-            this->hide();
-            managerLogin managerlogin;
-            managerlogin.setModal(true);
-            managerlogin.exec();
-        }
-        else if(client.manager == 0 && client.maintPers == 0){
-            QString action = "MAINWINDOW: CLIENT LOGGED IN";
-            QString role = "CLIENT";
-            mv.isTrail(client.isTrail, action);
-            logFile.addClientToLog(client.name, client.ID, role);
+        ui->label->setText("Incorrect login information, try again"); //Username is wrong, password is wrong, both are wrong, and user doesn't exist..
 
-            this->hide();
+        }else if(client.manager == 0 && client.maintPers == 0){
+        QString action = "MAINWINDOW: CLIENT LOGGED IN";
+        QString role = "CLIENT";
+        mv.isTrail(client.isTrail, action);
+        logFile.addClientToLog(client.name, client.ID, role);
 
-            clientView customerLogin;
-            customerLogin.setModal(true);
-            customerLogin.exec();
+        this->hide();
+
+        clientView customerLogin;
+        customerLogin.setModal(true);
+        customerLogin.exec();
         }
         else if(client.maintPers == 1){
             QString action = "MAINWINDOW: MAINTANECE LOGGED IN";
@@ -81,10 +81,15 @@ void MainWindow::on_pushButton_clicked()
             MaintanenceView maintanceLogin;
             maintanceLogin.setModal(true);
             maintanceLogin.exec();
-        }
-        else {
-            ui->label->setText("Incorrect login information, try again");
-            //Cases: Username is wrong, password is wrong, both are wrong, and user doesn't exist..
+        }else if(client.manager == 1){
+            QString action = "MAINWINDOW: MANAGER LOGGED IN";
+            QString role = "MANAGER";
+            mv.isTrail(client.isTrail, action);
+            logFile.addClientToLog(client.name, client.ID, role);
+            this->hide();
+            managerLogin managerlogin;
+            managerlogin.setModal(true);
+            managerlogin.exec();
         }
     }
 }
@@ -118,14 +123,18 @@ bool MainWindow::fileExists(QString path) {
     }
 }
 
-void MainWindow::createDBFileThenTable(){
+void MainWindow::createDBFileThenTable(){ //Create Tables, if they don't exist
     QFile file("database.db");
      file.open(QIODevice::ReadWrite);
      file.close();
      connOpen();
      QSqlQuery query;
-     query.exec("CREATE TABLE 'BANKING_CREDENTIALS' ('Name' TEXT, 'UserName' TEXT, 'Password' TEXT, 'Manager' INT, 'Cheq' DOUBLE, 'Sav' DOUBLE, 'SavAcct' INT, 'CheqAcct' INT)");
+     query.exec("CREATE TABLE 'BANKING_CREDENTIALS' ('Name' TEXT, 'UserName' TEXT, 'Password' TEXT, 'Manager' INT, 'Cheq' DOUBLE, 'Sav' DOUBLE, 'SavAcct' INT, 'CheqAcct' INT, 'execTrace' INT, 'maintainence' INT)");
+     query.exec("INSERT INTO BANKING_CREDENTIALS (Name,UserName,Password,Manager,Cheq,Sav,SavAcct,CheqAcct,execTrace, maintainence) VALUES ('Manager Credentials','ManagerCred','Welcome1234',1,0,0,0,0,1,0)");
+     query.exec("INSERT INTO BANKING_CREDENTIALS (Name,UserName,Password,Manager,Cheq,Sav,SavAcct,CheqAcct,execTrace, maintainence) VALUES ('Client Credentials','FirstClient','Welcome1234',0,1,1,5000,5000,1,0)");
+     query.exec("INSERT INTO BANKING_CREDENTIALS (Name,UserName,Password,Manager,Cheq,Sav,SavAcct,CheqAcct,execTrace, maintainence) VALUES ('Maintanence Credentials','MantanenceCred','Welcome1234',1,0,0,0,0,1,1)");
+     qDebug()<<(query.lastQuery());
+     query.exec("CREATE TABLE 'CLIENT_REQUEST' ('name' TEXT, 'openSav' INT, 'openCheq' INT, 'done' INT, 'date' TEXT)");
      connClose();
-
 }
 

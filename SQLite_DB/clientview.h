@@ -22,6 +22,10 @@ private slots:
 
     void on_widthBtn_clicked();
 
+    void on_transBtn_clicked();
+
+    void on_reqBtn_clicked();
+
 private:
     Ui::clientView *ui;
 };

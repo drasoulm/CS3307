@@ -2,15 +2,17 @@
 #include "ui_maintanenceview.h"
 #include "customerlog.h"
 #include "helper.h"
+#include <QApplication>
+#include "viewactionlog.h"
 
-Helper::currentClientInfo res;
-extern struct Helper::currentClientInfo client;
+Helper::currentClientInfo res; //resulting client used for searches
+extern struct Helper::currentClientInfo client; //Currently logged on client
 MaintanenceView::MaintanenceView(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::MaintanenceView)
 {
     ui->setupUi(this);
-
+    /*Check to see if client has execution tracing on*/
     if(client.isTrail == 1){
         ui->traceBtn->setText("Turn OFF Execution Tracing");
     }else{
@@ -24,7 +26,7 @@ MaintanenceView::~MaintanenceView()
 }
 
 
-bool MaintanenceView::isTrail(int trace, QString action){
+bool MaintanenceView::isTrail(int trace, QString action){ //Function return true if the client has tracing turned on
     customerLog logAction;
     if(trace == 1){
         logAction.customerActionToLog(action);
@@ -36,7 +38,7 @@ bool MaintanenceView::isTrail(int trace, QString action){
 
 
 
-void MaintanenceView::on_traceBtn_clicked()
+void MaintanenceView::on_traceBtn_clicked() //Trace Button to turn tracing on or off by Maintanence person
 {
     if(client.isTrail == 0){
         MainWindow db;
@@ -73,4 +75,12 @@ void MaintanenceView::on_traceBtn_clicked()
            qDebug()<<("Could not turn off exection trace please try again..");
         }
     }
+}
+
+void MaintanenceView::on_pushButton_clicked()
+{
+    this->hide();
+    ViewActionLog val;
+    val.setModal(true);
+    val.exec();
 }

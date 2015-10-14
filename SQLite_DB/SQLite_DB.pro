@@ -21,7 +21,10 @@ SOURCES += main.cpp\
     customerlog.cpp \
     clientview.cpp \
     maintanenceview.cpp \
-    helper.cpp
+    helper.cpp \
+    openaccount.cpp \
+    bankdata.cpp \
+    viewactionlog.cpp
 
 HEADERS  += mainwindow.h \
     managerlogin.h \
@@ -31,7 +34,10 @@ HEADERS  += mainwindow.h \
     customerlog.h \
     clientview.h \
     maintanenceview.h \
-    helper.h
+    helper.h \
+    openaccount.h \
+    bankdata.h \
+    viewactionlog.h
 
 FORMS    += mainwindow.ui \
     managerlogin.ui \
@@ -39,4 +45,7 @@ FORMS    += mainwindow.ui \
     deleteuser.ui \
     allcustomersview.ui \
     clientview.ui \
-    maintanenceview.ui
+    maintanenceview.ui \
+    openaccount.ui \
+    bankdata.ui \
+    viewactionlog.ui

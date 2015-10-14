@@ -39,7 +39,7 @@ public:
     ~DeleteUser();
 
 public slots:
-     void updateCustomerInformation(double cheq, double sav, QTextEdit *hey, QSqlQuery qry2);
+     void updateCustomerInformation(int cheq, int sav, QTextEdit *hey, QSqlQuery qry2);
 
 private slots:
     void on_searchButton_clicked();

@@ -3,6 +3,9 @@
 #include "QInputDialog"
 #include "QValidator"
 #include "QLineEdit"
+#include "helper.h"
+
+extern struct Helper::currentClientInfo client;
 
 createuser::createuser(QWidget *parent) :
     QDialog(parent),
@@ -16,8 +19,10 @@ createuser::~createuser()
     delete ui;
 }
 
-void createuser::on_nextButton_clicked()
+void createuser::on_nextButton_clicked() //Login button
 {
+    MaintanenceView mv;
+
     QString password2, password, username, fullname;
     bool cheq, sav;
     double answerCheq, answerSav;
@@ -75,6 +80,8 @@ void createuser::on_nextButton_clicked()
         qry.prepare("INSERT INTO BANKING_CREDENTIALS (Name, Password, UserName, Manager, Cheq, Sav, CheqAcct, SavAcct) VALUES ('"+fullname+"','"+password+"','"+username+"',0,"+str2+","+str1+","+str4+","+str3+")");
         qDebug()<<(qry.lastQuery());
         if(qry.exec()){
+            QString action = "USER CREATED FOR: '"+fullname+"'";
+            mv.isTrail(client.isTrail, action);
            qDebug()<<("Inserted into DB");
            db.connClose();
            QMessageBox::information(this,tr("Account Created"),tr("Account has been created for user!"));
@@ -99,8 +106,9 @@ void createuser::on_nextButton_clicked()
 
 }
 
-void createuser::on_cancelButton_clicked()
+void createuser::on_cancelButton_clicked() //Exit and Go to login screen
 {
+    this->hide();
     managerLogin managerView;
     managerView.setModal(true);
     managerView.exec();

@@ -6,7 +6,6 @@
 
 /*Manager Actions*/
 Helper helper;
-
 extern struct Helper::currentClientInfo client;
 Helper::currentClientInfo searchResult;
 
@@ -17,7 +16,6 @@ DeleteUser::DeleteUser(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    qDebug()<<(client.savBal);
 
 }
 
@@ -28,6 +26,8 @@ DeleteUser::~DeleteUser()
 
 void DeleteUser::on_searchButton_clicked()
 {
+    MaintanenceView mview;
+
     //Search Name and maybe other things after
     name = ui->lineEdit->text();
 
@@ -54,7 +54,7 @@ void DeleteUser::on_searchButton_clicked()
        if(name.isEmpty()){
            QMessageBox::information(this,"Account","Couldn't find this person. Try again and remember - Firstname Lastname");
        }else {
-           updateCustomerInformation(searchResult.cheqBal, searchResult.savBal, ui->hey, qry2);
+           updateCustomerInformation(searchResult.hasCheq, searchResult.hasSav, ui->hey, qry2);
            //Disable action buttons based on account... if cheq exists but sav doesnt, grey out 'CLOSE SAVINGS ACCOUNT' but 'CLOSE CHEQUING' enabled
            disableBtns(searchResult.hasCheq, searchResult.hasSav, ui->closeSav, ui->closeChequing, ui->closeBoth);
        }
@@ -66,6 +66,7 @@ void DeleteUser::on_searchButton_clicked()
 
 void DeleteUser::on_closeChequing_clicked()
 {
+    MaintanenceView mview;
 
 
     //Close chequing account
@@ -76,6 +77,7 @@ void DeleteUser::on_closeChequing_clicked()
           MainWindow db;
           db.connOpen();
           QSqlQuery qry;
+
           qry.prepare("UPDATE BANKING_CREDENTIALS SET CheqAcct=0 WHERE Name ='"+name+"'");
           qDebug()<<(qry.lastQuery());
 
@@ -85,6 +87,9 @@ void DeleteUser::on_closeChequing_clicked()
              db.connClose();
              QMessageBox::information(this, name, "Chequing Account has been Deleted");
 
+             //Log
+             QString action = "CLOSED ACCOUNT FOR '"+name+"': CHEQ";
+             mview.isTrail(client.isTrail, action);
 
              MainWindow db;
              db.connOpen();
@@ -148,7 +153,7 @@ void DeleteUser::disableBtns(int cheq, int sav, QPushButton *savBtn, QPushButton
     }
 }
 
-void DeleteUser::updateCustomerInformation(double cheq, double sav, QTextEdit *hey, QSqlQuery qry2){
+void DeleteUser::updateCustomerInformation(int cheq, int sav, QTextEdit *hey, QSqlQuery qry2){
     if(sav==1 && cheq ==1){hey->setText("NAME: " + qry2.value(0).toString() + "\n" + "USERNAME:" + qry2.value(1).toString() + "\n" +"CHEQUING: $" + qry2.value(4).toString() + "\n" + "SAVINGS: $" + qry2.value(5).toString());
     }else if(sav==1&&cheq==0){hey->setText("NAME: " + qry2.value(0).toString() + "\n" + "USERNAME:" + qry2.value(1).toString() + "\n" + "SAVINGS: $" + qry2.value(5).toString() + "\n CHEQUING: NO CHEQUING ACCOUNT");
     }else if(sav==0&&cheq==1){hey->setText("NAME: " + qry2.value(0).toString() + "\n" + "USERNAME:" + qry2.value(1).toString() + "\n" +"CHEQUING: $" + qry2.value(4).toString() + "\n SAVINGS: NO SAVINGS ACCOUNT");
@@ -167,6 +172,8 @@ void DeleteUser::on_backButton_clicked()
 
 void DeleteUser::on_closeSav_clicked()
 {
+    MaintanenceView mview;
+
     //Close chequing account
     if (searchResult.savBal == 0){
           QMessageBox::StandardButton reply;
@@ -183,7 +190,9 @@ void DeleteUser::on_closeSav_clicked()
           if(qry.exec()){
              db.connClose();
              QMessageBox::information(this, name, "Saving's Account has been Deleted");
-
+             //Log
+             QString action = "CLOSED ACCOUNT FOR '"+name+"': SAV";
+             mview.isTrail(client.isTrail, action);
              MainWindow db;
              db.connOpen();
 
@@ -217,6 +226,8 @@ void DeleteUser::on_closeSav_clicked()
 
 void DeleteUser::on_closeBoth_clicked()
 {
+    MaintanenceView mview;
+
     //Close chequing account
     if (searchResult.savBal == 0 && searchResult.cheqBal ==0){
           QMessageBox::StandardButton reply;
@@ -232,7 +243,9 @@ void DeleteUser::on_closeBoth_clicked()
           if(qry.exec()){
              db.connClose();
              QMessageBox::information(this, name, "Saving's and Chequing Account have been closed");
-
+             //Log
+             QString action = "CLOSED BOTH ACCOUNTS FOR '"+name+"'";
+             mview.isTrail(client.isTrail, action);
              MainWindow db;
              db.connOpen();
 
